@@ -1,53 +1,86 @@
 import flask
 from flask import Flask, request, jsonify
-import os
 import torch
-from torch.nn import Softmax
+import torch.nn as nn
+import torch.nn.functional as F
+import base64
+import io
+from PIL import Image
 import numpy as np
-from model import *
-from preprocessImage import *
 import logging
+
+# define the CNN architecture
+class Net(nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        # convolutional layer (sees 32x32x3 image tensor)
+        self.conv1 = nn.Conv2d(3, 16, 3, padding=1)
+        # convolutional layer (sees 16x16x16 tensor)
+        self.conv2 = nn.Conv2d(16, 32, 3, padding=1)
+        # convolutional layer (sees 8x8x32 tensor)
+        self.conv3 = nn.Conv2d(32, 64, 3, padding=1)
+        # max pooling layer
+        self.pool = nn.MaxPool2d(2, 2)
+        # linear layer (64 * 4 * 4 -> 500)
+        self.fc1 = nn.Linear(64 * 4 * 4, 500)
+        # linear layer (500 -> 10)
+        self.fc2 = nn.Linear(500, 10)
+        # dropout layer (p=0.25)
+        self.dropout = nn.Dropout(0.25)
+
+    def forward(self, x):
+        # add sequence of convolutional and max pooling layers
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = self.pool(F.relu(self.conv3(x)))
+        # flatten image input
+        x = x.view(-1, 64 * 4 * 4)
+        # add dropout layer
+        x = self.dropout(x)
+        # add 1st hidden layer, with relu activation function
+        x = F.relu(self.fc1(x))
+        # add dropout layer
+        x = self.dropout(x)
+        # add 2nd hidden layer, with relu activation function
+        x = self.fc2(x)
+        return x
+
+def get_model():
+    gpu_available = torch.cuda.is_available()
+
+    #Loading model
+    # check if CUDA is available
+    gpu_available = torch.cuda.is_available()
+
+    # create a complete CNN
+    model = Net()
+    model.load_state_dict(torch.load('./model_cifar.pt'))
+    model.eval()
+
+    # move tensors to GPU if CUDA is available
+    if gpu_available:
+        model.cuda()    
+
+    return model
+
+def get_image(base64string):
+    # reading image
+    image = io.BytesIO(base64.b64decode(base64string))
+    image = np.array(Image.open(image))
+
+    image = ((image/255) - 0.5)/0.5
+    image = np.transpose(image,(2,1,0))
+    image = np.expand_dims(image,axis=0)
+    image = torch.from_numpy(image)
+    image = image.to(torch.float32)
+
+    return image
 
 # Create Flask application
 app = flask.Flask(__name__)
 
-logHandler = logging.FileHandler('./logs/app.log')
+logHandler = logging.FileHandler('./flask_app/logs/app.log')
 logHandler.setLevel(logging.INFO)
 app.logger.addHandler(logHandler)
 app.logger.setLevel(logging.INFO)
 
-
-# Create a URL route in our application for "/"
-methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'COPY', 'HEAD', 'OPTIONS', 'LINK', 'UNLINK', 'PURGE', 'LOCK', 'UNLOCK', 'PROPFIND', 'VIEW']
-
-@app.route('/',methods=methods)
-def recognizeImage():
-    gpu_available = torch.cuda.is_available()
-
-    base64string = request.get_json(force=True)['base64']
-    image = get_image(base64string)
-
-    if image.shape[1:] != (3,32,32):
-        return jsonify( error = "only RGB image 32x32 accepted", message = "failure!" )
-
-    model = get_model()
-
-    output_tensor = model(image.cuda())
-    output_tensor = Softmax(dim=1)(output_tensor)
-    prob_pred_tensor, pred_tensor = torch.max(output_tensor, 1)
-
-    output = np.squeeze(output_tensor.detach().numpy()) if not gpu_available else np.squeeze(output_tensor.cpu().detach().numpy())
-
-    prob_pred = np.squeeze(prob_pred_tensor.detach().numpy()) if not gpu_available else np.squeeze(prob_pred_tensor.cpu().detach().numpy())    
-    pred = np.squeeze(pred_tensor.detach().numpy()) if not gpu_available else np.squeeze(pred_tensor.cpu().detach().numpy())
-
-    classes = ['airplane', 'automobile', 'bird', 'cat', 'deer','dog', 'frog', 'horse', 'ship', 'truck']
-
-    pred_dict = {'predicted_class' : str(classes[pred]),
-                 'prob_predicted_class' : str(prob_pred)}
-
-    for i,prob in enumerate(output):
-        pred_dict[classes[i]] = str(prob)
-
-
-    return jsonify( prediction = pred_dict, message = "success!" )
