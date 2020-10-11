@@ -6,8 +6,18 @@ from torch.nn import Softmax
 import numpy as np
 from model import *
 from preprocessImage import *
-from flask_app import app
+import logging
 
+# Create Flask application
+app = flask.Flask(__name__)
+
+logHandler = logging.FileHandler('./logs/app.log')
+logHandler.setLevel(logging.INFO)
+app.logger.addHandler(logHandler)
+app.logger.setLevel(logging.INFO)
+
+
+# CORS(app)
 # Create a URL route in our application for "/"
 methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'COPY', 'HEAD', 'OPTIONS', 'LINK', 'UNLINK', 'PURGE', 'LOCK', 'UNLOCK', 'PROPFIND', 'VIEW']
 
@@ -23,6 +33,10 @@ def recognizeImage():
 
     model = get_model()
 
+    # breakpoint()
+
+    # get sample outputs
+    # breakpoint()
     output_tensor = model(image.cuda())
     output_tensor = Softmax(dim=1)(output_tensor)
     prob_pred_tensor, pred_tensor = torch.max(output_tensor, 1)
@@ -42,3 +56,8 @@ def recognizeImage():
 
 
     return jsonify( prediction = pred_dict, message = "success!" )
+
+# RUN FLASK APPLICATION
+if __name__ == '__main__':
+    # RUNNNING FLASK APP
+    app.run(debug=True, host = '0.0.0.0', port=5000)
