@@ -1,19 +1,19 @@
 - The purpose of this project is to deploy and test a CNN model trained on the cifar-10 dataset. This was created for the purpose of testing for the QE team.
 
 - To run the app use the command:
-	gunicorn wsgi:app -b 127.0.0.1:8000 -w 4 --access-logfile ./logs/access.log --error-logfile ./logs/error.log
+      gunicorn run:flask_app/classify_image -b 127.0.0.1:8000 -w 4 --access-logfile ./flask_app/logs/logs/access.log --error-logfile ./flask_app/logs/error.log
 
 - The port used is 8000 and the log files are present in the directory ./logs
 
 - A wsgi production server is used
 
-- The trained model i.e. state dictionary is 'model_cifar.pt' 
+- The trained model i.e. state dictionary is at '.model_cifar.pt' 
 
 - The python notebook (cifar10_cnn_solution-ddl.ipynb) contains the code for training the model
 
 - In order to send a request to this REST API (flask), a base64 encoded image needs to be sent. The format ofr the payload is as follows:-
 		{
-			"base64" : "<base64 encoding of the image>"
+			"base64" : "base64 encoding of the32x32 RGB image"
 		}
 
 		command to encode an image to base64 can be found at: https://cloud.google.com/vision/docs/base64
@@ -24,6 +24,7 @@
 - Only a 32x32 RGB image can be processed.
 
 - The image sent in the payload will be classified as one of the following :-
+
       ['airplane', 'automobile', 'bird', 'cat', 'deer','dog', 'frog', 'horse', 'ship', 'truck']
 
       example of a successful request:
@@ -45,7 +46,7 @@
 		    }
 		}
 
-	example of a failed request:
+      example of a failed request:
 		{
 		    "error": "only RGB image 32x32 accepted",
 		    "message": "failure!"
