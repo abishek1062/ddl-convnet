@@ -365,3 +365,42 @@ ModuleNotFoundError: No module named '/home/abishek/ddl-convnet/wsgi'
 [2020-10-12 00:03:33 +0530] [12181] [INFO] Worker exiting (pid: 12181)
 [2020-10-12 00:03:33 +0530] [12176] [INFO] Worker exiting (pid: 12176)
 [2020-10-12 00:03:33 +0530] [12173] [INFO] Shutting down: Master
+[2020-10-12 05:59:46 +0530] [18253] [INFO] Starting gunicorn 20.0.4
+[2020-10-12 05:59:46 +0530] [18253] [INFO] Listening at: http://127.0.0.1:8000 (18253)
+[2020-10-12 05:59:46 +0530] [18253] [INFO] Using worker: sync
+[2020-10-12 05:59:46 +0530] [18256] [INFO] Booting worker with pid: 18256
+[2020-10-12 05:59:46 +0530] [18258] [INFO] Booting worker with pid: 18258
+[2020-10-12 05:59:46 +0530] [18259] [INFO] Booting worker with pid: 18259
+[2020-10-12 05:59:46 +0530] [18261] [INFO] Booting worker with pid: 18261
+[2020-10-12 05:59:51 +0530] [18253] [INFO] Handling signal: int
+[2020-10-12 05:59:51 +0530] [18256] [INFO] Worker exiting (pid: 18256)
+[2020-10-12 05:59:51 +0530] [18259] [INFO] Worker exiting (pid: 18259)
+[2020-10-12 05:59:51 +0530] [18261] [INFO] Worker exiting (pid: 18261)
+[2020-10-12 05:59:51 +0530] [18258] [INFO] Worker exiting (pid: 18258)
+[2020-10-12 05:59:51 +0530] [18253] [INFO] Shutting down: Master
+[2020-10-12 06:00:34 +0530] [18289] [INFO] Starting gunicorn 20.0.4
+[2020-10-12 06:00:34 +0530] [18289] [INFO] Listening at: http://127.0.0.1:8000 (18289)
+[2020-10-12 06:00:34 +0530] [18289] [INFO] Using worker: sync
+[2020-10-12 06:00:34 +0530] [18292] [INFO] Booting worker with pid: 18292
+[2020-10-12 06:00:34 +0530] [18293] [INFO] Booting worker with pid: 18293
+[2020-10-12 06:00:34 +0530] [18294] [INFO] Booting worker with pid: 18294
+[2020-10-12 06:00:35 +0530] [18297] [INFO] Booting worker with pid: 18297
+[2020-10-12 06:01:02 +0530] [18289] [INFO] Handling signal: int
+[2020-10-12 06:01:02 +0530] [18293] [INFO] Worker exiting (pid: 18293)
+[2020-10-12 06:01:02 +0530] [18294] [INFO] Worker exiting (pid: 18294)
+[2020-10-12 06:01:02 +0530] [18297] [INFO] Worker exiting (pid: 18297)
+[2020-10-12 06:01:02 +0530] [18292] [INFO] Worker exiting (pid: 18292)
+[2020-10-12 06:01:02 +0530] [18289] [INFO] Shutting down: Master
+[2020-10-12 06:01:13 +0530] [18345] [INFO] Starting gunicorn 20.0.4
+[2020-10-12 06:01:13 +0530] [18345] [INFO] Listening at: http://127.0.0.1:8000 (18345)
+[2020-10-12 06:01:13 +0530] [18345] [INFO] Using worker: sync
+[2020-10-12 06:01:13 +0530] [18348] [INFO] Booting worker with pid: 18348
+[2020-10-12 06:01:13 +0530] [18349] [INFO] Booting worker with pid: 18349
+[2020-10-12 06:01:13 +0530] [18352] [INFO] Booting worker with pid: 18352
+[2020-10-12 06:01:14 +0530] [18353] [INFO] Booting worker with pid: 18353
+[2020-10-12 06:01:22 +0530] [18345] [INFO] Handling signal: int
+[2020-10-12 06:01:22 +0530] [18348] [INFO] Worker exiting (pid: 18348)
+[2020-10-12 06:01:22 +0530] [18353] [INFO] Worker exiting (pid: 18353)
+[2020-10-12 06:01:22 +0530] [18352] [INFO] Worker exiting (pid: 18352)
+[2020-10-12 06:01:22 +0530] [18349] [INFO] Worker exiting (pid: 18349)
+[2020-10-12 06:01:22 +0530] [18345] [INFO] Shutting down: Master
